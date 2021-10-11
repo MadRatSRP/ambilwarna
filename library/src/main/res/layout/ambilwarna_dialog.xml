@@ -15,35 +15,34 @@
         android:paddingRight="@dimen/ambilwarna_spacer"
         android:paddingTop="@dimen/ambilwarna_spacer" >
         <yuku.ambilwarna.AmbilWarnaSquare
-            android:id="@+id/view_sat_val"
+            android:id="@+id/saturation_and_value_selection_view"
+            android:layerType="software"
             android:layout_width="@dimen/ambilwarna_hsvWidth"
-            android:layout_height="@dimen/ambilwarna_hsvHeight"
-            android:layerType="software" />
+            android:layout_height="@dimen/ambilwarna_hsvHeight" />
         <ImageView
-            android:id="@+id/view_hue"
-            android:layout_width="@dimen/ambilwarna_hueWidth"
-            android:layout_height="@dimen/ambilwarna_hsvHeight"
-            android:layout_marginLeft="@dimen/ambilwarna_spacer"
-            android:layout_toRightOf="@id/view_sat_val"
+            android:id="@+id/saturation_and_value_selector_view"
+            android:src="@drawable/ic_saturation_and_value_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/hue_selection_view"
+            android:src="@drawable/ambilwarna_hue"
             android:scaleType="fitXY"
-            android:src="@drawable/ambilwarna_hue" />
+            android:layout_toRightOf="@id/saturation_and_value_selection_view"
+            android:layout_marginLeft="@dimen/ambilwarna_spacer"
+            android:layout_width="@dimen/ambilwarna_hueWidth"
+            android:layout_height="@dimen/ambilwarna_hsvHeight" />
         <ImageView
-            android:id="@+id/view_cursor"
-            android:layout_width="9dp"
-            android:layout_height="9dp"
+            android:id="@+id/hue_selector_view"
+            android:src="@drawable/ic_hue_selector"
             android:scaleType="matrix"
-            android:src="@drawable/ambilwarna_cursor" />
-        <ImageView
-            android:id="@+id/view_target"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:scaleType="matrix"
-            android:src="@drawable/ambilwarna_target" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <LinearLayout
             android:id="@+id/state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/view_sat_val"
+            android:layout_below="@id/saturation_and_value_selection_view"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/ambilwarna_spacer"
             android:gravity="center"
