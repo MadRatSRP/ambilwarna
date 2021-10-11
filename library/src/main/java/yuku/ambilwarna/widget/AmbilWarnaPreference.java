@@ -8,7 +8,7 @@ import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.View;
 
-import yuku.ambilwarna.AmbilWarnaDialog;
+import yuku.ambilwarna.FGHColorPickerDialog;
 import yuku.ambilwarna.R;
 
 public class AmbilWarnaPreference extends Preference {
@@ -35,15 +35,15 @@ public class AmbilWarnaPreference extends Preference {
 	}
 
 	@Override protected void onClick() {
-		new AmbilWarnaDialog(getContext(), value, supportsAlpha, new AmbilWarnaDialog.OnAmbilWarnaListener() {
-			@Override public void onOk(AmbilWarnaDialog dialog, int color) {
+		new FGHColorPickerDialog(getContext(), value, new FGHColorPickerDialog.OnnDialogButtonClickedListener() {
+			@Override public void onOk(FGHColorPickerDialog dialog, int color) {
 				if (!callChangeListener(color)) return; // They don't want the value to be set
 				value = color;
 				persistInt(value);
 				notifyChanged();
 			}
 
-			@Override public void onCancel(AmbilWarnaDialog dialog) {
+			@Override public void onCancel(FGHColorPickerDialog dialog) {
 				// nothing to do
 			}
 		}).show();

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import yuku.ambilwarna.AmbilWarnaDialog;
+import yuku.ambilwarna.FGHColorPickerDialog;
 
 public class AmbilWarnaDemoActivity extends Activity {
 	TextView text1;
@@ -23,39 +23,27 @@ public class AmbilWarnaDemoActivity extends Activity {
 		text1 = (TextView) findViewById(R.id.text1);
 		displayColor();
 
-		button1.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				openDialog(false);
-			}
-		});
+		button1.setOnClickListener(view -> openDialog(false));
 
-		button2.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				openDialog(true);
-			}
-		});
+		button2.setOnClickListener(view -> openDialog(true));
 
-		button3.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(getApplicationContext(), AmbilWarnaDemoPreferenceActivity.class));
-			}
-		});
+		button3.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), AmbilWarnaDemoPreferenceActivity.class)));
 	}
 
 	void openDialog(boolean supportsAlpha) {
-		AmbilWarnaDialog dialog = new AmbilWarnaDialog(AmbilWarnaDemoActivity.this, color, supportsAlpha, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+		FGHColorPickerDialog dialog = new FGHColorPickerDialog(
+			AmbilWarnaDemoActivity.this,
+			color,
+			new FGHColorPickerDialog.OnnDialogButtonClickedListener() {
 			@Override
-			public void onOk(AmbilWarnaDialog dialog, int color) {
+			public void onOk(FGHColorPickerDialog dialog, int color) {
 				Toast.makeText(getApplicationContext(), "ok", Toast.LENGTH_SHORT).show();
 				AmbilWarnaDemoActivity.this.color = color;
 				displayColor();
 			}
 
 			@Override
-			public void onCancel(AmbilWarnaDialog dialog) {
+			public void onCancel(FGHColorPickerDialog dialog) {
 				Toast.makeText(getApplicationContext(), "cancel", Toast.LENGTH_SHORT).show();
 			}
 		});
