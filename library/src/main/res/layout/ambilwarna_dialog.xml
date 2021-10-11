@@ -10,15 +10,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:clipToPadding="false"
-        android:paddingBottom="@dimen/ambilwarna_spacer"
-        android:paddingLeft="@dimen/ambilwarna_spacer"
-        android:paddingRight="@dimen/ambilwarna_spacer"
-        android:paddingTop="@dimen/ambilwarna_spacer" >
+        android:paddingBottom="@dimen/spacer"
+        android:paddingLeft="@dimen/spacer"
+        android:paddingRight="@dimen/spacer"
+        android:paddingTop="@dimen/spacer" >
         <yuku.ambilwarna.AmbilWarnaSquare
             android:id="@+id/saturation_and_value_selection_view"
             android:layerType="software"
-            android:layout_width="@dimen/ambilwarna_hsvWidth"
-            android:layout_height="@dimen/ambilwarna_hsvHeight" />
+            android:layout_width="@dimen/hsv_width"
+            android:layout_height="@dimen/hsv_height" />
         <ImageView
             android:id="@+id/saturation_and_value_selector_view"
             android:src="@drawable/ic_saturation_and_value_selector"
@@ -28,10 +28,10 @@
             android:id="@+id/hue_selection_view"
             android:src="@drawable/ambilwarna_hue"
             android:scaleType="fitXY"
-            android:layout_toRightOf="@id/saturation_and_value_selection_view"
-            android:layout_marginLeft="@dimen/ambilwarna_spacer"
-            android:layout_width="@dimen/ambilwarna_hueWidth"
-            android:layout_height="@dimen/ambilwarna_hsvHeight" />
+            android:layout_below="@id/saturation_and_value_selection_view"
+            android:layout_marginTop="45dp"
+            android:layout_width="@dimen/hsv_height"
+            android:layout_height="24dp" />
         <ImageView
             android:id="@+id/hue_selector_view"
             android:src="@drawable/ic_hue_selector"
@@ -42,9 +42,9 @@
             android:id="@+id/state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/saturation_and_value_selection_view"
+            android:layout_below="@id/hue_selection_view"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/ambilwarna_spacer"
+            android:layout_marginTop="35dp"
             android:gravity="center"
             android:orientation="horizontal" >
             <FrameLayout
@@ -63,8 +63,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/ambilwarna_spacer"
-                android:paddingRight="@dimen/ambilwarna_spacer"
+                android:paddingLeft="@dimen/spacer"
+                android:paddingRight="@dimen/spacer"
                 android:src="@drawable/ambilwarna_arrow_right" />
             <FrameLayout
                 android:layout_width="60dp"
