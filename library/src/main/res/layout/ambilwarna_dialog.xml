@@ -34,7 +34,7 @@
             android:layout_height="24dp" />
         <ImageView
             android:id="@+id/hue_selector_view"
-            android:src="@drawable/ic_hue_selector"
+            android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
             android:scaleType="matrix"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

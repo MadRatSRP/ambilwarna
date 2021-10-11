@@ -172,14 +172,15 @@ class FGHColorPickerDialog(
                 motionEvent.action == MotionEvent.ACTION_DOWN ||
                 motionEvent.action == MotionEvent.ACTION_UP
             ) {
-                var y = motionEvent.y
-                if (y < 0f) {
-                    y = 0f
+                var x = motionEvent.x
+                if (x < 0f) {
+                    x = 0f
                 }
-                if (y > hueSelectionView.measuredHeight) {
-                    y = hueSelectionView.measuredHeight - 0.001f // to avoid jumping the cursor from bottom to top.
+                if (x > hueSelectionView.measuredWidth) {
+                    // to avoid jumping the cursor from bottom to top.
+                    x = hueSelectionView.measuredWidth - 0.001f
                 }
-                var hue = 360f - 360f / hueSelectionView.measuredHeight * y
+                var hue = 360f - 360f / hueSelectionView.measuredWidth * x
                 if (hue == 360f) {
                     hue = 0f
                 }
@@ -196,15 +197,22 @@ class FGHColorPickerDialog(
     
     private fun moveHueSelector() {
         with(binding) {
-            var y = hueSelectionView.measuredHeight - colorHue * hueSelectionView.measuredHeight / 360f
-            if (y == hueSelectionView.measuredHeight.toFloat()) {
-                y = 0f
+            var x = hueSelectionView.measuredWidth - colorHue * hueSelectionView.measuredWidth / 360f
+            if (x == hueSelectionView.measuredWidth.toFloat()) {
+                x = 0f
             }
             val layoutParams = hueSelectorView.layoutParams as RelativeLayout.LayoutParams
-            layoutParams.leftMargin = (hueSelectionView.left - floor((hueSelectorView.measuredWidth / 2).toDouble())
-                    - viewContainer.paddingLeft).toInt()
-            layoutParams.topMargin = (hueSelectionView.top + y - floor((hueSelectorView.measuredHeight / 2).toDouble())
-                - viewContainer.paddingTop).toInt()
+            
+            // 0.0, где 0 - x, 0 - y
+            // y уменьшается, x остаётся на месте
+    
+            // 0.0, где 0 - x, 0 - y
+            // y остаётся на месте, x увеличивается
+            
+            layoutParams.topMargin = ((hueSelectionView.top - floor((hueSelectorView.measuredHeight / 2).toDouble())
+                - viewContainer.paddingTop).toInt()) - 10
+            layoutParams.leftMargin = (hueSelectionView.left + x - floor((hueSelectorView.measuredWidth / 2).toDouble())
+                - viewContainer.paddingLeft).toInt()
             hueSelectorView.layoutParams = layoutParams
         }
     }
