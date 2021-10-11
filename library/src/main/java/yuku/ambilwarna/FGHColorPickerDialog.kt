@@ -60,8 +60,7 @@ class FGHColorPickerDialog(
         )
         with(binding) {
             saturationAndValueSelectionView.setHue(colorHue)
-            viewOldColor.setBackgroundColor(currentColor)
-            viewNewColor.setBackgroundColor(currentColor)
+            currentColorView.setBackgroundColor(currentColor)
             saturationAndValueSelectionView.setOnTouchListener { view: View?, motionEvent: MotionEvent ->
                 onSaturationAndValueSelectionViewTouched(
                     view,
@@ -143,7 +142,7 @@ class FGHColorPickerDialog(
                 colorValue = 1f - 1f / saturationAndValueSelectionView.measuredHeight * y
                 // update view
                 moveSaturationAndValueSelector()
-                viewNewColor.setBackgroundColor(color)
+                currentColorView.setBackgroundColor(color)
                 return true
             }
             return false
@@ -188,7 +187,7 @@ class FGHColorPickerDialog(
                 // update view
                 saturationAndValueSelectionView.setHue(hue)
                 moveHueSelector()
-                viewNewColor.setBackgroundColor(color)
+                currentColorView.setBackgroundColor(color)
                 return true
             }
             return false
