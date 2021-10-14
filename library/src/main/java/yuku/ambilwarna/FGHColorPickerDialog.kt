@@ -4,12 +4,16 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import yuku.ambilwarna.databinding.AmbilwarnaDialogBinding
+import java.lang.String
 import kotlin.math.floor
 
 class FGHColorPickerDialog(
@@ -60,7 +64,7 @@ class FGHColorPickerDialog(
         )
         with(binding) {
             saturationAndValueSelectionView.setHue(colorHue)
-            currentColorView.setBackgroundColor(currentColor)
+            restoreSavedColors(color)
             saturationAndValueSelectionView.setOnTouchListener { view: View?, motionEvent: MotionEvent ->
                 onSaturationAndValueSelectionViewTouched(
                     view,
@@ -76,22 +80,16 @@ class FGHColorPickerDialog(
             // if back button is used, call back our listener.
             dialog = AlertDialog.Builder(context).apply {
                 setPositiveButton(android.R.string.ok) { _: DialogInterface?, _: Int ->
-                    if (this@FGHColorPickerDialog.listener != null) {
-                        this@FGHColorPickerDialog.listener.onOk(
-                            this@FGHColorPickerDialog,
-                            color
-                        )
-                    }
+                    listener?.onOk(
+                        this@FGHColorPickerDialog,
+                        color
+                    )
                 }
                 setNegativeButton(android.R.string.cancel) { _: DialogInterface?, _: Int ->
-                    if (this@FGHColorPickerDialog.listener != null) {
-                        this@FGHColorPickerDialog.listener.onCancel(this@FGHColorPickerDialog)
-                    }
+                    listener?.onCancel(this@FGHColorPickerDialog)
                 }
                 setOnCancelListener {
-                    if (this@FGHColorPickerDialog.listener != null) {
-                        this@FGHColorPickerDialog.listener.onCancel(this@FGHColorPickerDialog)
-                    }
+                    listener?.onCancel(this@FGHColorPickerDialog)
                 }
             }.create()
             // kill all padding from the dialog window
@@ -112,6 +110,36 @@ class FGHColorPickerDialog(
                     }
                 })
             }
+        }
+    }
+    
+    private fun updateCurrentHexColor(color: Int) {
+        val stringHexColor = String.format("#%06X", 0xFFFFFF and color)
+        binding.currentColorHex.text = stringHexColor
+    }
+    
+    private fun restoreSavedColors(color: Int) {
+        with(binding) {
+            updateCurrentHexColor(color)
+            currentColorView.setBackgroundColor(color)
+            saturationAndValueSelectorView.updateSelectorColor(color)
+            hueSelectorView.updateSelectorColor(color)
+        }
+    }
+    
+    private fun updateSaturationAndValueColor(color: Int) {
+        with(binding) {
+            updateCurrentHexColor(color)
+            currentColorView.setBackgroundColor(color)
+            saturationAndValueSelectorView.updateSelectorColor(color)
+        }
+    }
+    
+    private fun updateHueColor(color: Int) {
+        with(binding) {
+            currentColorView.setBackgroundColor(color)
+            saturationAndValueSelectorView.updateSelectorColor(color)
+            hueSelectorView.updateSelectorColor(color)
         }
     }
     
@@ -142,11 +170,18 @@ class FGHColorPickerDialog(
                 colorValue = 1f - 1f / saturationAndValueSelectionView.measuredHeight * y
                 // update view
                 moveSaturationAndValueSelector()
-                currentColorView.setBackgroundColor(color)
+                updateSaturationAndValueColor(color)
                 return true
             }
             return false
         }
+    }
+    
+    private fun ImageView.updateSelectorColor(color: Int) {
+        drawable.mutate()
+        drawable.colorFilter = PorterDuffColorFilter(
+            color, PorterDuff.Mode.SRC_IN
+        )
     }
     
     private fun moveSaturationAndValueSelector() {
@@ -187,7 +222,7 @@ class FGHColorPickerDialog(
                 // update view
                 saturationAndValueSelectionView.setHue(hue)
                 moveHueSelector()
-                currentColorView.setBackgroundColor(color)
+                updateHueColor(color)
                 return true
             }
             return false
@@ -209,7 +244,7 @@ class FGHColorPickerDialog(
             // y остаётся на месте, x увеличивается
             
             layoutParams.topMargin = ((hueSelectionView.top - floor((hueSelectorView.measuredHeight / 2).toDouble())
-                - viewContainer.paddingTop).toInt()) - 10
+                - viewContainer.paddingTop).toInt()) + 30
             layoutParams.leftMargin = (hueSelectionView.left + x - floor((hueSelectorView.measuredWidth / 2).toDouble())
                 - viewContainer.paddingLeft).toInt()
             hueSelectorView.layoutParams = layoutParams
