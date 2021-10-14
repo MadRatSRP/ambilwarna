@@ -1,67 +1,71 @@
 package yuku.ambilwarna
 
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import yuku.ambilwarna.databinding.AmbilwarnaDialogBinding
 import kotlin.math.floor
 
-class FGHColorPickerDialog(
+class FGHColorPickerDialog @JvmOverloads constructor(
     context: Context?,
     currentColor: Int,
-    private val listener: OnnDialogButtonClickedListener?
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+): LinearLayout(
+    context,
+    attrs,
+    defStyle
 ) {
-    interface OnnDialogButtonClickedListener {
-        fun onCancel(dialog: FGHColorPickerDialog?)
-        
-        fun onOk(dialog: FGHColorPickerDialog?, color: Int)
-    }
-    
-    private val dialog: AlertDialog
-    private val currentColorHSV = FloatArray(3)
-    private val binding: AmbilwarnaDialogBinding
-    
+    private val binding = AmbilwarnaDialogBinding.inflate(
+        LayoutInflater.from(context)
+    )
+    private val hueColorHSV = FloatArray(3)
+    private val saturationAndValueColorHSV = FloatArray(3)
     // Hue - [0], Saturation = [1], Value = [2]
-    private val color: Int
+    val color: Int
         get() {
-            val argb = Color.HSVToColor(currentColorHSV)
+            val argb = Color.HSVToColor(saturationAndValueColorHSV)
             return alpha shl 24 or (argb and 0x00ffffff)
         }
     private var colorHue: Float
-        get() = currentColorHSV[0]
+        get() = saturationAndValueColorHSV[0]
         private set(hue) {
-            currentColorHSV[0] = hue
+            hueColorHSV[0] = hue
+            saturationAndValueColorHSV[0] = hue
         }
     private var colorSaturation: Float
-        get() = currentColorHSV[1]
+        get() = saturationAndValueColorHSV[1]
         private set(saturation) {
-            currentColorHSV[1] = saturation
+            saturationAndValueColorHSV[1] = saturation
         }
     private var colorValue: Float
-        get() = currentColorHSV[2]
+        get() = saturationAndValueColorHSV[2]
         private set(value) {
-            currentColorHSV[2] = value
+            saturationAndValueColorHSV[2] = value
         }
     private var alpha: Int
     
     init {
-        Color.colorToHSV(
-            currentColor,
-            currentColorHSV
-        )
+        addView(binding.root)
+        arrayOf(
+            saturationAndValueColorHSV,
+            hueColorHSV
+        ).forEach {
+            Color.colorToHSV(
+                currentColor,
+                it
+            )
+        }
         alpha = Color.alpha(currentColor)
-        binding = AmbilwarnaDialogBinding.inflate(
-            LayoutInflater.from(context)
-        )
         with(binding) {
             saturationAndValueSelectionView.setHue(colorHue)
             restoreSavedColors(color)
@@ -76,7 +80,7 @@ class FGHColorPickerDialog(
                 )
             }
             // if back button is used, call back our listener.
-            dialog = AlertDialog.Builder(context).apply {
+            /*dialog = AlertDialog.Builder(context).apply {
                 setPositiveButton(android.R.string.ok) { _: DialogInterface?, _: Int ->
                     listener?.onOk(
                         this@FGHColorPickerDialog,
@@ -89,15 +93,15 @@ class FGHColorPickerDialog(
                 setOnCancelListener {
                     listener?.onCancel(this@FGHColorPickerDialog)
                 }
-            }.create()
+            }.create()*/
             // kill all padding from the dialog window
-            dialog.setView(
+            /*dialog.setView(
                 binding.root,
                 0,
                 0,
                 0,
                 0
-            )
+            )*/
             // move cursor & target on first draw
             binding.root.viewTreeObserver.apply {
                 addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
@@ -243,10 +247,6 @@ class FGHColorPickerDialog(
                 - viewContainer.paddingLeft).toInt()
             hueSelectorView.layoutParams = layoutParams
         }
-    }
-    
-    fun show() {
-        dialog.show()
     }
     
     private fun ImageView.updateSelectorColor(color: Int) {
