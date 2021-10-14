@@ -13,7 +13,6 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import yuku.ambilwarna.databinding.AmbilwarnaDialogBinding
-import java.lang.String
 import kotlin.math.floor
 
 class FGHColorPickerDialog(
@@ -31,6 +30,7 @@ class FGHColorPickerDialog(
     private val currentColorHSV = FloatArray(3)
     private val binding: AmbilwarnaDialogBinding
     
+    // Hue - [0], Saturation = [1], Value = [2]
     private val color: Int
         get() {
             val argb = Color.HSVToColor(currentColorHSV)
@@ -65,15 +65,13 @@ class FGHColorPickerDialog(
         with(binding) {
             saturationAndValueSelectionView.setHue(colorHue)
             restoreSavedColors(color)
-            saturationAndValueSelectionView.setOnTouchListener { view: View?, motionEvent: MotionEvent ->
+            saturationAndValueSelectionView.setOnTouchListener { _: View?, motionEvent: MotionEvent ->
                 onSaturationAndValueSelectionViewTouched(
-                    view,
                     motionEvent
                 )
             }
-            hueSelectionView.setOnTouchListener { view: View?, motionEvent: MotionEvent ->
+            hueSelectionView.setOnTouchListener { _: View?, motionEvent: MotionEvent ->
                 onHueSelectionViewTouched(
-                    view,
                     motionEvent
                 )
             }
@@ -137,6 +135,7 @@ class FGHColorPickerDialog(
     
     private fun updateHueColor(color: Int) {
         with(binding) {
+            updateCurrentHexColor(color)
             currentColorView.setBackgroundColor(color)
             saturationAndValueSelectorView.updateSelectorColor(color)
             hueSelectorView.updateSelectorColor(color)
@@ -144,7 +143,6 @@ class FGHColorPickerDialog(
     }
     
     private fun onSaturationAndValueSelectionViewTouched(
-        view: View?,
         motionEvent: MotionEvent
     ): Boolean {
         with(binding) {
@@ -177,28 +175,22 @@ class FGHColorPickerDialog(
         }
     }
     
-    private fun ImageView.updateSelectorColor(color: Int) {
-        drawable.mutate()
-        drawable.colorFilter = PorterDuffColorFilter(
-            color, PorterDuff.Mode.SRC_IN
-        )
-    }
-    
     private fun moveSaturationAndValueSelector() {
         with(binding) {
             val x = colorSaturation * saturationAndValueSelectionView.measuredWidth
             val y = (1f - colorValue) * saturationAndValueSelectionView.measuredHeight
             val layoutParams = saturationAndValueSelectorView.layoutParams as RelativeLayout.LayoutParams
-            layoutParams.leftMargin = (saturationAndValueSelectionView.left + x - floor((saturationAndValueSelectorView.measuredWidth / 2).toDouble())
+            layoutParams.leftMargin = (saturationAndValueSelectionView.left + x - floor(
+                (saturationAndValueSelectorView.measuredWidth / 2).toDouble())
                 - viewContainer.paddingLeft).toInt()
-            layoutParams.topMargin = (saturationAndValueSelectionView.top + y - floor((saturationAndValueSelectorView.measuredHeight / 2).toDouble())
+            layoutParams.topMargin = (saturationAndValueSelectionView.top + y - floor(
+                (saturationAndValueSelectorView.measuredHeight / 2).toDouble())
                 - viewContainer.paddingTop).toInt()
             saturationAndValueSelectorView.layoutParams = layoutParams
         }
     }
     
     private fun onHueSelectionViewTouched(
-        view: View?,
         motionEvent: MotionEvent
     ): Boolean {
         with(binding) {
@@ -243,9 +235,11 @@ class FGHColorPickerDialog(
             // 0.0, где 0 - x, 0 - y
             // y остаётся на месте, x увеличивается
             
-            layoutParams.topMargin = ((hueSelectionView.top - floor((hueSelectorView.measuredHeight / 2).toDouble())
+            layoutParams.topMargin = ((hueSelectionView.top - floor(
+                (hueSelectorView.measuredHeight / 2).toDouble())
                 - viewContainer.paddingTop).toInt()) + 30
-            layoutParams.leftMargin = (hueSelectionView.left + x - floor((hueSelectorView.measuredWidth / 2).toDouble())
+            layoutParams.leftMargin = (hueSelectionView.left + x - floor(
+                (hueSelectorView.measuredWidth / 2).toDouble())
                 - viewContainer.paddingLeft).toInt()
             hueSelectorView.layoutParams = layoutParams
         }
@@ -253,5 +247,12 @@ class FGHColorPickerDialog(
     
     fun show() {
         dialog.show()
+    }
+    
+    private fun ImageView.updateSelectorColor(color: Int) {
+        drawable.mutate()
+        drawable.colorFilter = PorterDuffColorFilter(
+            color, PorterDuff.Mode.SRC_IN
+        )
     }
 }
