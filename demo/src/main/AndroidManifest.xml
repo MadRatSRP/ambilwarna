@@ -3,15 +3,14 @@
 	package="yuku.ambilwarna.demo">
 
 	<application android:icon="@mipmap/ic_launcher" android:label="AmbilWarna Demo">
-		<activity android:name=".AmbilWarnaDemoActivity">
+		<activity android:name=".MainActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".AmbilWarnaDemoPreferenceActivity" />
-	</application>
+    </application>
 
 	<supports-screens android:anyDensity="true"
 		android:smallScreens="true"
